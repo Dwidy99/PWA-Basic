@@ -25,6 +25,7 @@ $(document).ready(function () {
 
   var networkDataReceived = false;
 
+  // fresh data from online
   var networkUpdate = fetch(_url)
     .then(function (response) {
       return response.json();

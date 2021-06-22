@@ -7,6 +7,11 @@ const filesToCache = [
   "/js/main.js",
   "/img/fast.png",
   "/fallback.json",
+  "/manifest.json",
+  "/img/icon-192x192.png",
+  "/img/icon-256x256.png",
+  "/img/icon-384x384.png",
+  "/img/icon-512x512.png",
 ];
 
 // Install
