@@ -1,4 +1,22 @@
 body {
-   background: rgba(288, 288, 288);
-   font-family: sans-serif; 
+  background: rgba(288, 288, 288);
+  font-family: sans-serif;
+}
+
+header,
+main,
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+select {
+  padding: 5px;
+  border: 2px solid orangered;
+  background-color: orangered;
+  color: aliceblue;
+  border-radius: 5px;
 }
