@@ -1,63 +1,91 @@
 $(document).ready(function () {
-	var _url = 'https://my-json-server.typicode.com/Dwidy99/pwaApi/products';
+  var _url = "https://my-json-server.typicode.com/Dwidy99/pwaApi/products";
 
-	var dataResults = '';
-	var catResults = '';
-	var categories = [];
+  var dataResults = "";
+  var catResults = "";
+  var categories = [];
 
-	$.get(_url, function (data) {
-		$.each(data, function (key, items) {
-			_cat = items.category;
+  function renderData(data) {
+    $.each(data, function (key, items) {
+      _cat = items.category;
 
-			dataResults +=
-				'<div>' + '<h3>' + items.name + '</h3>' + '<p>' + _cat + '</p>';
-			('</div>');
+      dataResults +=
+        "<div>" + "<h3>" + items.name + "</h3>" + "<p>" + _cat + "</p>";
+      ("</div>");
 
-			if ($.inArray(_cat, categories) == -1) {
-				categories.push(_cat);
-				catResults += "<option value='" + _cat + "'>" + _cat + '</option>';
-			}
-		});
+      if ($.inArray(_cat, categories) == -1) {
+        categories.push(_cat);
+        catResults += "<option value='" + _cat + "'>" + _cat + "</option>";
+      }
+    });
 
-		$('#products').html(dataResults);
-		$('#cat_select').html("<option value='all'>Semua</option>" + catResults);
-	});
+    $("#products").html(dataResults);
+    $("#cat_select").html("<option value='all'>Semua</option>" + catResults);
+  }
 
-	// Funcgsi Filter
-	$('#cat_select').on('change', function () {
-		updateProduct($(this).val());
-	});
+  var networkDataReceived = false;
 
-	function updateProduct(cat) {
-		var dataResults = '';
-		var _newUrl = _url;
+  var networkUpdate = fetch(_url)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      networkDataReceived = true;
+      renderData(data);
+    });
 
-		if (cat != 'all') _newUrl = _url + '?category=' + cat;
+  // return data from cache
+  caches
+    .match(_url)
+    .then(function (response) {
+      if (!response) throw Error("no data on cache");
+      return response.json();
+    })
+    .then(function (data) {
+      if (!networkDataReceived) {
+        renderData(data);
+        console.log("render data from cache");
+      }
+    })
+    .catch(function () {
+      return networkUpdate;
+    });
 
-		$.get(_newUrl, function (data) {
-			$.each(data, function (key, items) {
-				_cat = items.category;
-				dataResults +=
-					'<div>' + '<h3>' + items.name + '</h3>' + '<p>' + _cat + '</p>';
-				('</div>');
-			});
+  // Funcgsi Filter
+  $("#cat_select").on("change", function () {
+    updateProduct($(this).val());
+  });
 
-			$('#products').html(dataResults);
-		});
-	}
+  function updateProduct(cat) {
+    var dataResults = "";
+    var _newUrl = _url;
+
+    if (cat != "all") _newUrl = _url + "?category=" + cat;
+
+    $.get(_newUrl, function (data) {
+      $.each(data, function (key, items) {
+        _cat = items.category;
+        dataResults +=
+          "<div>" + "<h3>" + items.name + "</h3>" + "<p>" + _cat + "</p>";
+        ("</div>");
+      });
+
+      $("#products").html(dataResults);
+    });
+  }
 }); // end document ready jquery
 
 // PWA (register service worker)
-if ('serviceWorker' in navigator) {
-	window.addEventListener('load', function () {
-		navigator.serviceWorker
-			.register('serviceWorker.js')
-			.then((registration) => {
-				alert('Service Worker is registered');
-				console.log('Service Worker is registered', registration);
-			})
-			.catch((err) => {
-				console.error('Registration failed:', err);
-			});
-	});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("serviceWorker.js")
+      .then((registration) => {
+        alert("Service Worker is registered");
+        console.log("Service Worker is registered", registration);
+      })
+      .catch((err) => {
+        console.error("Registration failed:", err);
+      });
+  });
 }
