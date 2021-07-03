@@ -7,10 +7,10 @@ $(document).ready(function () {
 
   function renderData(data) {
     $.each(data, function (key, items) {
-      _cat = items.category;
+      _cat = items.deskripsi;
 
       dataResults +=
-        "<div>" + "<h3>" + items.name + "</h3>" + "<p>" + _cat + "</p>";
+        "<div>" + "<h3>" + items.nama + "</h3>" + "<p>" + _cat + "</p>";
       ("</div>");
 
       if ($.inArray(_cat, categories) == -1) {
@@ -61,13 +61,13 @@ $(document).ready(function () {
     var dataResults = "";
     var _newUrl = _url;
 
-    if (cat != "all") _newUrl = _url + "?category=" + cat;
+    if (cat != "all") _newUrl = _url + "?deskripsi=" + cat;
 
     $.get(_newUrl, function (data) {
       $.each(data, function (key, items) {
-        _cat = items.category;
+        _cat = items.deskripsi;
         dataResults +=
-          "<div>" + "<h3>" + items.name + "</h3>" + "<p>" + _cat + "</p>";
+          "<div>" + "<h3>" + items.nama + "</h3>" + "<p>" + _cat + "</p>";
         ("</div>");
       });
 
