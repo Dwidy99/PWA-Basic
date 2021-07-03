@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var _url = "https://my-json-server.typicode.com/Dwidy99/pwaApi/products";
+  var _url = "https://my-json-server.typicode.com/Dwidy99/pwaApi/product";
 
   var dataResults = "";
   var catResults = "";
