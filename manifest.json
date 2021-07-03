@@ -3,7 +3,7 @@
   "background_color": "#f69435",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/index.html",
+  "start_url": "index.https://pwa-basic-taupe.vercel.app/",
   "name": "PWABasic",
   "short_name": "PWABasic",
   "description": "Belajar PWA Basic",
