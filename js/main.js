@@ -7,6 +7,7 @@ $(document).ready(function () {
 
   function renderData(data) {
     $.each(data, function (key, items) {
+      console.log(items);
       _cat = items.deskripsi;
 
       dataResults +=
