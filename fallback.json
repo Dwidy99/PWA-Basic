@@ -1,7 +1,7 @@
 [
   {
     "id": 0,
-    "name": "Nope! You ARE OFFLINE",
-    "category": "none"
+    "nama": "Nope! You ARE OFFLINE",
+    "deskripsi": "refresh the browser when you online!"
   }
 ]
