@@ -75,7 +75,7 @@ async function cacheFirst(request) {
 }
 
 async function networkFirst(request) {
-  const dataCache = await caches.open(dataCacheName);
+  const dataCache = await caches.open(staticCacheName);
   try {
     const networkResponse = await fetch(request);
     dataCache.put(request, networkResponse.clone());
