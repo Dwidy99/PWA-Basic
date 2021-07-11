@@ -26,38 +26,65 @@ self.addEventListener("install", (event) => {
 });
 
 // Strategi cache --> Cache Then Network
-self.addEventListener("fetch", (event) => {
-  var request = event.request;
-  var url = new URL(request.url);
+// self.addEventListener("fetch", (event) => {
+//   var request = event.request;
+//   var url = new URL(request.url);
 
-  // Pindahkan request API dan Internal
+//   // Pindahkan request API dan Internal
+//   if (url.origin === location.origin) {
+//     event.respondWith(
+//       caches.match(request).then(function (response) {
+//         return response || fetch(response);
+//       })
+//     );
+//   } else {
+//     event.respondWith(
+//       caches
+//         .open("products-cache")
+//         .then(function (cache) {
+//           return fetch(request).then(function (liveResponse) {
+//             if (new RegExp('^(?:[a-z]+:)?//', 'i').test(new URL(event.request.url).protocol) ) return;
+//             cache.put(request, liveResponse.clone());
+//             return liveResponse;
+//           });
+//         })
+//         // --> jika tidak berhasil cache dari network
+//         .catch(function () {
+//           return caches.match(request).then(function (response) {
+//             if (response) return response;
+//             return caches.match("/fallback.json");
+//           });
+//         })
+//     );
+//   }
+// });
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
   if (url.origin === location.origin) {
-    event.respondWith(
-      caches.match(request).then(function (response) {
-        return response || fetch(response);
-      })
-    );
+    event.respondWith(cacheFirst(request));
   } else {
-    event.respondWith(
-      caches
-        .open("products-cache")
-        .then(function (cache) {
-          return fetch(request).then(function (liveResponse) {
-            if (new RegExp('^(?:[a-z]+:)?//', 'i').test(new URL(event.request.url).protocol) ) return;
-            cache.put(request, liveResponse.clone());
-            return liveResponse;
-          });
-        })
-        // --> jika tidak berhasil cache dari network
-        .catch(function () {
-          return caches.match(request).then(function (response) {
-            if (response) return response;
-            return caches.match("/fallback.json");
-          });
-        })
-    );
+    event.respondWith(networkFirst(request));
   }
 });
+
+async function cacheFirst(request) {
+  const cachedResponse = await caches.match(request);
+  return cachedResponse || fetch(request);
+}
+
+async function networkFirst(request) {
+  const dataCache = await caches.open(dataCacheName);
+  try {
+    const networkResponse = await fetch(request);
+    dataCache.put(request, networkResponse.clone());
+    return networkResponse;
+  } catch (err) {
+    const cachedResponse = await dataCache.match(request);
+    return cachedResponse || (await caches.match("./fallback.json"));
+  }
+}
 
 // Hapus Cache yang kadaluarsa
 self.addEventListener("activate", (event) => {
