@@ -43,6 +43,7 @@ self.addEventListener("fetch", (event) => {
         .open("products-cache")
         .then(function (cache) {
           return fetch(request).then(function (liveResponse) {
+            if (new RegExp('^(?:[a-z]+:)?//', 'i').test(new URL(event.request.url).protocol) ) return;
             cache.put(request, liveResponse.clone());
             return liveResponse;
           });
